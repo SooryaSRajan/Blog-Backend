@@ -14,6 +14,10 @@ const BlogSchema = new mongoose.Schema({
     authorName: {
         type: String,
         required: true
+    },
+    blogTitle: {
+        type: String,
+        required: true
     }
 
 });
