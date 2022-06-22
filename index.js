@@ -10,7 +10,6 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 require("./config/database_connection")();
 
 app.get("/", (req, res) => {
-
     res.send(`Server running on port ${PORT}`)
 })
 
