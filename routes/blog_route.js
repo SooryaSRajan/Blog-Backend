@@ -4,7 +4,7 @@ const blogModel = require("../models/blog_model")
 
 router.get("/getBlogs", (req, res) => {
 
-    blogModel.find({}, (err, data) => {
+    blogModel.find({}).select("-_id -__v").exec((err, data) => {
         if (err) {
             return res.status(500).send({
                 message: "Something went wrong",
@@ -27,7 +27,7 @@ router.get("/getBlogs", (req, res) => {
 
 });
 
-router.post("addBlog", (req, res) => {
+router.post("/addBlog", (req, res) => {
 
     const {blog, authorName, blogTitle} = req.body
 
@@ -35,7 +35,13 @@ router.post("addBlog", (req, res) => {
         return res.status(400).send({
             message: "Please attach blog data",
         })
-    } else if (blog.length <= 100) {
+    }
+    if (typeof blog !== 'string') {
+        return res.status(400).send({
+            message: "Blogs should be of type STRING",
+        })
+    }
+    if (blog.length <= 100) {
         return res.status(400).send({
             message: "Blogs should have more than 100 characters",
         })
@@ -45,7 +51,13 @@ router.post("addBlog", (req, res) => {
         return res.status(400).send({
             message: "Please attach author name",
         })
-    } else if (/\d/.test(authorName)) {
+    }
+    if (typeof authorName !== 'string') {
+        return res.status(400).send({
+            message: "Author name should be of type STRING",
+        })
+    }
+    if (/\d/.test(authorName)) {
         return res.status(400).send({
             message: "Author name should not have numbers",
         })
@@ -53,11 +65,17 @@ router.post("addBlog", (req, res) => {
 
     if (!blogTitle) {
         return res.status(400).send({
-            message: "Please attach blog name",
+            message: "Please attach blog title",
         })
     }
 
-    if (blogTitle < 3) {
+    if (typeof blogTitle !== 'string') {
+        return res.status(400).send({
+            message: "Blog Title should be of type STRING",
+        })
+    }
+
+    if (blogTitle.length < 3) {
         return res.status(400).send({
             message: "Blog name should be at least 3 characters log",
         })
@@ -81,3 +99,5 @@ router.post("addBlog", (req, res) => {
 
 
 })
+
+module.exports = router
